@@ -1,6 +1,6 @@
 # Obby Bots
 
-<img src="assets/icon.png" alt="Obby Bots icon" width="128" />
+<img src="https://tr.rbxcdn.com/180DAY-2d7b6f597e5b88954424e55b64d38d7c/150/150/Image/Webp/noFilterg" alt="Obby Bots icon" width="128" />
 
 A Roblox game where players race through short obstacle courses (obbies), then watch "replay bots" complete them forever to earn credits. Covers gameplay systems, a chest/rarity progression loop, and a full Rojo + Git tooling setup for version control. Built in collaboration with [a987a](https://www.roblox.com/users/283053707/profile).
 

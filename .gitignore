@@ -1,0 +1,12 @@
+# Project place file
+/ObbyBots.rbxlx
+*.rbxl
+
+# Roblox Studio lock files
+/*.rbxlx.lock
+/*.rbxl.lock
+
+sourcemap.json
+
+rokit.toml
+.DS_Store

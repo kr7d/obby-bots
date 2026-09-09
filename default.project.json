@@ -1,0 +1,45 @@
+{
+  "name": "ObbyBots",
+  "tree": {
+    "$className": "DataModel",
+
+    "ReplicatedStorage": {
+      "$ignoreUnknownInstances": true,
+      "$path": "src/shared"
+    },
+
+    "ServerScriptService": {
+      "$ignoreUnknownInstances": true,
+      "$path": "src/server"
+    },
+
+    "ServerStorage": {
+      "$ignoreUnknownInstances": true,
+      "$path": "src/serverstorage" 
+    },
+
+    "StarterGui": {
+      "$ignoreUnknownInstances": true,
+      "Record": {
+        "$className": "ScreenGui",
+        "$ignoreUnknownInstances": true,
+        "$path": "src/startergui/RecordGui"
+      },
+      "UI": {
+        "$className": "ScreenGui",
+        "$ignoreUnknownInstances": true,
+        "UI_Scripts": {
+          "$path": "src/startergui/UI_Scripts"
+        }
+      }
+    },
+
+    "StarterPlayer": {
+      "$ignoreUnknownInstances": true,
+      "StarterPlayerScripts": {
+        "$ignoreUnknownInstances": true,
+        "$path": "src/client"
+      }
+    }
+  }
+}

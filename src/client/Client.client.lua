@@ -608,13 +608,13 @@ Data.Obbies.ChildRemoved:Connect(UpdateValidZones)
 local ObbyToBuy = nil
 for _, validZone in workspace.Zones.ValidZones:GetChildren() do
 	validZone.Touched:Connect(function(hit)
-		if game.Players:GetPlayerFromCharacter(hit.Parent) == player then
-			if Data.Obbies:FindFirstChild(validZone.Name) or ObbyToBuy then return end -- already owned
-			Utilities.UI.DisplayFrame(Frames.ObbyPurchase, Frames.ObbyPurchase.OpenConfig, true)
-			Frames.ObbyPurchase.Description.Text = "Would you like to purchase "..validZone.Name
-				.." for "..Utilities.Short.en(RS.Assets.Obbies[validZone.Name]:GetAttribute("Cost")).."¢?"
-			ObbyToBuy = validZone
-		end
+		if game.Players:GetPlayerFromCharacter(hit.Parent) ~= player then return end
+		if Data.Obbies:FindFirstChild(validZone.Name) then return end -- already owned
+		if ObbyToBuy and Frames.ObbyPurchase.Visible then return end -- prompt already open
+		Utilities.UI.DisplayFrame(Frames.ObbyPurchase, Frames.ObbyPurchase.OpenConfig, true)
+		Frames.ObbyPurchase.Description.Text = "Would you like to purchase "..validZone.Name
+			.." for "..Utilities.Short.en(RS.Assets.Obbies[validZone.Name]:GetAttribute("Cost")).."¢?"
+		ObbyToBuy = validZone
 	end)
 end
 

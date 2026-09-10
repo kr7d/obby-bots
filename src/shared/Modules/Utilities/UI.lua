@@ -9,11 +9,10 @@ local fov = game:GetService("Workspace"):WaitForChild("Camera")
 
 local module = {}
 
-local lastActivation = 0
+local DEBOUNCE = 0.35
+local lastActivation = setmetatable({}, {__mode = "k"})
 function module.DisplayFrame(targetFrame, config, overrideVisible)
 	local blur = Lighting:WaitForChild("LCBlurEffect")
-
-	local DEBOUNCE = 0.35
 	
 	for _, frame in targetFrame.Parent:GetChildren() do -- close other frames
 		if not frame:IsA("Frame") then continue end
@@ -38,8 +37,8 @@ function module.DisplayFrame(targetFrame, config, overrideVisible)
 	end
 
 	local currentTime = tick()
-	if currentTime - lastActivation < DEBOUNCE then return end
-	lastActivation = currentTime
+	if currentTime - (lastActivation[targetFrame] or 0) < DEBOUNCE then return end
+	lastActivation[targetFrame] = currentTime
 
 	if not targetFrame.Visible or (overrideVisible and overrideVisible == true) then
 		targetFrame.Visible = true

@@ -21,7 +21,6 @@ local Settings = {
 	}
 }
 
-Settings.Obbies = require(script.Obbies)
 Settings.Tiers = require(script.Tiers)
 
 return Settings

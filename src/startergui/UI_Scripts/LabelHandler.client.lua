@@ -108,18 +108,17 @@ end
 
 local function updateCapacityLabel()
 	inventoryButton.CapacityLabel.Text = tostring(nonSaveValues.NumOfSlotsUsed.Value).."/"..tostring(nonSaveValues.BotCapacity.Value)
+	displayIfFull()
 end
 
 updateCapacityLabel()
 
 nonSaveValues.NumOfSlotsUsed:GetPropertyChangedSignal("Value"):Connect(function()
 	updateCapacityLabel()
-	displayIfFull()
 end)
 
 nonSaveValues.BotCapacity:GetPropertyChangedSignal("Value"):Connect(function()
 	updateCapacityLabel()
-	displayIfFull()
 end)
 
 

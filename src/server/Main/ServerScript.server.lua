@@ -9,6 +9,7 @@ local SS = game:GetService("ServerStorage")
 local Modules = RS:WaitForChild("Modules")
 local botModule = require(SS.BotModule)
 local Settings = require(RS:WaitForChild("Game Settings").Settings)
+local Utilities = require(Modules.Utilities)
 
 --// Remotes
 local Remotes = RS:WaitForChild("Remotes")
@@ -21,11 +22,11 @@ for _, v in pairs(workspace.Zones.ValidZones:GetChildren()) do
 	if not (v:IsA("BasePart") and RS.Assets.Obbies:FindFirstChild(v.Name) and v:FindFirstChild("DescriptionGui") and v.DescriptionGui:FindFirstChild("Description")) then continue end
 	local description = v.DescriptionGui.Description
 	description.ObbyName.Text = v.Name
-	description.Prize.Text = RS.Assets.Obbies[v.Name]:GetAttribute("Prize").."¢ per win"
+	description.Prize.Text = Utilities.Short.en(RS.Assets.Obbies[v.Name]:GetAttribute("Prize")).."¢ per win"
 	if RS.Assets.Obbies[v.Name]:GetAttribute("Cost") == 0 then
 		description.Cost.Text = "FREE"
 	else
-		description.Cost.Text = "Buy: "..RS.Assets.Obbies[v.Name]:GetAttribute("Cost").."¢"
+		description.Cost.Text = "Buy: "..Utilities.Short.en(RS.Assets.Obbies[v.Name]:GetAttribute("Cost")).."¢"
 	end
 end
 

@@ -116,7 +116,7 @@ function InitProbabilityFrames()
 		local ChestModel = game.Workspace.Map.Chests[Chest.Name]
 		local BillboardGui = this.ChestProbability:Clone()
 		BillboardGui.Parent = player.PlayerGui
-		BillboardGui.Adornee = ChestModel.Model.Main
+		BillboardGui.Adornee = ChestModel.Model:WaitForChild("Main")
 		
 		-- Sort bots to display easy bots top-left, rare bots bottom-right
 		local bots = {}

@@ -6,7 +6,12 @@
 /*.rbxlx.lock
 /*.rbxl.lock
 
-sourcemap.json
+# Claude Code custom commands
+/.claude/
+/Claude/
+CLAUDE.md
 
+# Misc.
+sourcemap.json
 rokit.toml
 .DS_Store

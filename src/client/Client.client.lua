@@ -6,6 +6,7 @@ local UserInputService = game:GetService("UserInputService")
 local RS = game:GetService("ReplicatedStorage")
 local MarketPlaceService = game:GetService("MarketplaceService")
 local RunService = game:GetService("RunService")
+local Lighting = game:GetService("Lighting")
 
 --// Module
 local Modules = RS:WaitForChild("Modules")
@@ -728,3 +729,14 @@ player.ChildAdded:Connect(function(c)
 		Frames.Inventory.Bots.Starter.Pulse:Destroy()
 	end
 end)
+
+
+
+--// Lighting
+local sky = Lighting:WaitForChild("LCSky")
+sky.SkyboxBk = "rbxassetid://246894245"
+sky.SkyboxDn = "rbxassetid://246893155"
+sky.SkyboxFt = "rbxassetid://246894274"
+sky.SkyboxLf = "rbxassetid://246894229"
+sky.SkyboxRt = "rbxassetid://246892987"
+sky.SkyboxUp = "rbxassetid://246894296"

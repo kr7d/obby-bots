@@ -21,24 +21,6 @@ A Roblox game where players race through short obstacle courses (obbies), then w
 
 > Players can also manually delete a slot's recording to free it up.
 
-## Credits & Multipliers
-
-Each bot's credits-per-win is calculated as:
-
-```
-Credits = Obby Base Credits × Bot Multiplier × Completion Time Multiplier
-```
-
-- **Obby Base Credits** — a flat value per obby (e.g. a starter obby might award 10 credits per win, an advanced obby up to 10,000).
-- **Bot Multiplier** — determined by the bot's rarity and tier; rarer/higher-tier bots multiply earnings more.
-- **Completion Time Multiplier** — rewards faster completion times, calculated as:
-
-  ```
-  min(3, 100^-(x - y) + 1)
-  ```
-
-  where `x` is the bot's completion time and `y` is a hand-tuned "good time" benchmark set per obby. This caps the bonus at 3x and scales down as completion time gets further from the target.
-
 ## Bots: Unlocking & Upgrading
 
 Bots are obtained through a chest system (parallel to Clash Royale):
@@ -55,11 +37,6 @@ Bots are obtained through a chest system (parallel to Clash Royale):
   | Rare | 48 |
   | Epic | 32 |
   | Legendary | 24 |
-
-## Gamepasses
-
-- **+1 Extra Bot Recording Slot** — raises the cap from 3 to 4 recording slots.
-- **Extra Luck** — doubles the chance of pulling rarer bots from chests.
 
 ## Misc. Features
 

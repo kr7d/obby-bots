@@ -1,5 +1,5 @@
 # Obby Bots
-🔗 [Play Game](https://www.roblox.com/games/110009073548190/Obby-Bots)
+[Play Game](https://www.roblox.com/games/110009073548190/Obby-Bots)
 
 <img src="https://tr.rbxcdn.com/180DAY-2d7b6f597e5b88954424e55b64d38d7c/150/150/Image/Webp/noFilterg" alt="Obby Bots icon" width="128" />
 

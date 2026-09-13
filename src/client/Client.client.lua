@@ -463,6 +463,8 @@ for _, v in SlotsFrame:GetChildren() do -- Handles the buttons for each bot slot
 	end)
 end
 
+
+
 --// Bot Inventory
 local BotInventory = {} -- all bots will be added in this table probably
 
@@ -522,10 +524,6 @@ function UpdateFields(BotFolder: Folder)
 		resetSlotSelection(v)
 	end
 	]]
-	
-	
-
-	
 end
 
 function AddBot(BotFolder) -- BotFolder is the bot's folder in Player.Data.Bots
@@ -599,6 +597,7 @@ function UpdateValidZones(Child)
 		v.CanCollide = not isOwned
 		v.SelectionBox.Color3 = isOwned and Color3.fromRGB(255,255,255) or Color3.fromRGB(0,0,0)
 		v.SelectionBox.SurfaceTransparency = isOwned and 0.95 or 0.5
+		v.DescriptionGui.Description.UIStroke.Enabled = if isOwned then false else true
 	end
 end
 

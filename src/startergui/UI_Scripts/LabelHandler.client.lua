@@ -16,6 +16,7 @@ if player.Parent == nil then return end
 --// Modules
 local Modules = RS.Modules
 local Utilities = require(Modules.Utilities)
+local Settings = require(RS["Game Settings"].Settings)
 
 --// Variables
 local playerData = player.Data.PlayerData
@@ -35,8 +36,25 @@ local tweenInfo = TweenInfo.new(
 )
 
 --* Display when player gains/loses credits *--
+local function updateRebirthLabel()
+    local credits = playerData.Credits.Value
+    local creditReq = Settings["REBIRTH_BASE_COST"] * (9^playerData.Rebirth.Value)
+    local progress = math.round(credits / creditReq * 100) / 100
+    local progressBar = UI.Canvas.Frames.Rebirth.ProgressBar
+    progressBar.Bar.Size = UDim2.fromScale(math.min(progress, 1), 1)
+    if credits < creditReq then
+        progressBar.Bar.Interactable = false
+        progressBar.Progress.Text = Utilities.Short.en(credits).."/"..Utilities.Short.en(creditReq)
+    else
+        progressBar.Bar.Interactable = true
+        progressBar.Progress.Text = "REBIRTH"
+    end
+end
+
 local oldCredits = nil
 playerData.Credits:GetPropertyChangedSignal("Value"):Connect(function()
+    updateRebirthLabel()
+
 	local newCredits = playerData.Credits.Value
 	creditsLabel.Text = Utilities.Short.en(newCredits).."¢"
 	
@@ -71,7 +89,7 @@ playerData.Credits:GetPropertyChangedSignal("Value"):Connect(function()
 end)
 
 statusLabel.Text = ""
-
+updateRebirthLabel()
 
 
 --* Initialize text for Slot 4 BuyButton *--

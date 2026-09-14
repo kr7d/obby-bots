@@ -18,7 +18,8 @@ local Settings = {
 		-- Price for slots
 		[2] = 1000;
 		[3] = 100000;
-	}
+	};
+    ["REBIRTH_BASE_COST"] = 1000000
 }
 
 Settings.Tiers = require(script.Tiers)

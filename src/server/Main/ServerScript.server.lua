@@ -244,6 +244,7 @@ end
 Remotes.Rebirth.OnServerEvent:Connect(function(player)
     player.Data.PlayerData.Rebirth.Value += 1
     resetPlayerData(player)
+    player:LoadCharacter()
 end)
 
 shared.GetEquippedBot = function(Player, botID)

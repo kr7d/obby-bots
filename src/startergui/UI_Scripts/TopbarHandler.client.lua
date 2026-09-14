@@ -26,4 +26,7 @@ for _, config in script:GetChildren() do
     if config:GetAttribute("ImageID") then
         icon:setImage(config:GetAttribute("ImageID"))
     end
+    if config:GetAttribute("ShowCaption") then
+        icon:setCaption("Open "..config.Name)
+    end
 end

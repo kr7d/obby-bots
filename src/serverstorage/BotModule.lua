@@ -307,7 +307,8 @@ function botModule.incrementStats(player, obbyName, elapsed, botID, botMultiplie
 	local playerData = player.Data.PlayerData
 	playerData.Wins.Value += 1
 	local multiplier = botModule.calculateMultiplier(obbyName, elapsed)
-	local creditsToAward = math.round(RS.Assets.Obbies[obbyName]:GetAttribute("Prize") * multiplier * botMultiplier)
+    local rebirthMultiplier = Settings["REBIRTH_MULTIPLIER"] ^ playerData.Rebirth.Value
+	local creditsToAward = math.round(RS.Assets.Obbies[obbyName]:GetAttribute("Prize") * multiplier * botMultiplier * rebirthMultiplier)
 	playerData.Credits.Value += creditsToAward
 	if botID == nil then return end
 	botModule.playerBots[player][botID].Wins += 1

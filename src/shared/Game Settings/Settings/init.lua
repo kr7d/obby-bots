@@ -5,6 +5,7 @@ local Settings = {
 		["LUCKY"] =  {1233219679, 641376333};
 	};
 	["LUCK_MULTIPLIER"] = 1.5;
+    ["REBIRTH_MULTIPLIER"] = 2;
 	-- Bot
 	["MIN_BOT_CAP"] = 1;
 	["MAX_BOT_SLOT"] = 4;

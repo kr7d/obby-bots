@@ -44,7 +44,7 @@ local function updateRebirthLabel()
     progressBar.Bar.Size = UDim2.fromScale(math.min(progress, 1), 1)
     if credits < creditReq then
         progressBar.Bar.Interactable = false
-        progressBar.Progress.Text = Utilities.Short.en(credits).."/"..Utilities.Short.en(creditReq)
+        progressBar.Progress.Text = Utilities.Short.en(credits).."/"..Utilities.Short.en(creditReq).."¢"
     else
         progressBar.Bar.Interactable = true
         progressBar.Progress.Text = "REBIRTH"

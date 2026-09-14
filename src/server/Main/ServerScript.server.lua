@@ -242,6 +242,7 @@ local function resetPlayerData(player)
 end
 
 Remotes.Rebirth.OnServerEvent:Connect(function(player)
+    player.Data.PlayerData.Rebirth.Value += 1
     resetPlayerData(player)
 end)
 

@@ -14,7 +14,6 @@ local Utilities = require(Modules.Utilities)
 --// Remotes
 local Remotes = RS:WaitForChild("Remotes")
 local FindBotIDToOverride = Remotes.FindBotIDToOverride
-local SetOwnsBot = Remotes.SetOwnsBot
 local BotReplay = Remotes.BotReplay
 
 --// Main
@@ -41,29 +40,33 @@ FindBotIDToOverride.OnServerInvoke = function(player, elapsed)
 end
 
 -- TODO: change to remote function
-SetOwnsBot.OnServerEvent:Connect(function(player, botID)
+local function setOwnsBot(player, botID, value)
 	if botID <= Settings["MIN_BOT_ID"] or botID > Settings["EXTRA_BOT_ID"] then
 		warn("botID = "..tostring(botID).." is out of range")
 		return
 	end
-	
-	local data = player.Data
-	local Gamepass = RS.Gamepasses.ExtraBot
-	local ownsBot = data.PlayerData["OwnsBot"..tostring(botID)]
-	
-	if botID == Settings["EXTRA_BOT_ID"] then
-		if data.Gamepasses[Gamepass.Name].Value or table.find(Settings["GAMEPASS_WHITELIST"]["EXTRA_BOT"], player.UserId) then
-			ownsBot.Value = true
-		else
-			ownsBot.Value = false
-		end
-	else
-		local credits = data.PlayerData.Credits
-		local cost = Settings["BOT SLOTS"][botID]
-		if credits.Value < cost then return end
-		credits.Value -= cost
-		ownsBot.Value = true
-	end
+
+    local data = player.Data
+    local ownsBot = data.PlayerData["OwnsBot"..tostring(botID)]
+
+    if value ~= nil then -- If value is manually to be set
+        ownsBot.Value = value
+    else
+        local Gamepass = RS.Gamepasses.ExtraBot
+        if botID == Settings["EXTRA_BOT_ID"] then
+            if data.Gamepasses[Gamepass.Name].Value or table.find(Settings["GAMEPASS_WHITELIST"]["EXTRA_BOT"], player.UserId) then
+                ownsBot.Value = true
+            else
+                ownsBot.Value = false
+            end
+        else
+            local credits = data.PlayerData.Credits
+            local cost = Settings["BOT SLOTS"][botID]
+            if credits.Value < cost then return end
+            credits.Value -= cost
+            ownsBot.Value = true
+        end
+    end
 	
 	botModule.updateBotCapacity(player)
 	
@@ -73,6 +76,10 @@ SetOwnsBot.OnServerEvent:Connect(function(player, botID)
 	locked.Visible = not ownsBot.Value
 	botFrame.Fields.Interactable = ownsBot.Value
 	botFrame.Fields.ResetButton.Visible = ownsBot.Value
+end
+
+Remotes.SetOwnsBot.OnServerEvent:Connect(function(player, botID)
+    setOwnsBot(player, botID)
 end)
 
 Remotes.UpgradeBot.OnServerEvent:Connect(function(player, BotFolder)
@@ -210,6 +217,32 @@ Remotes.BuyObby.OnServerEvent:Connect(function(player, validZone)
 	
 	local clone = obby:Clone()
 	clone.Parent = player.Data.Obbies
+end)
+
+local function resetPlayerData(player)
+    player.Data.PlayerData.Credits.Value = 0
+    setOwnsBot(player, 2, false)
+    setOwnsBot(player, 3, false)
+	botModule.removeBotData(player, 1)
+	botModule.removeBotData(player, 2)
+    botModule.removeBotData(player, 3)
+    botModule.removeBotData(player, 4)
+    for _, BotFolder in player.Data.Bots:GetChildren() do
+        if (BotFolder.Name == "YOU") then continue end
+        BotFolder:Destroy()
+    end
+    local starter = RS.Assets.BotTemplate:Clone()
+    starter.Name = "Starter"
+    starter.Parent = player.Data.Bots
+    starter:SetAttribute("Multiplier", RS.Assets.Bots.Starter.Settings.BaseMultiplier.Value)
+    for _, obby in player.Data.Obbies:GetChildren() do
+        if (obby.Name == "Obby Lobby") then continue end
+        obby:Destroy()
+    end
+end
+
+Remotes.Rebirth.OnServerEvent:Connect(function(player)
+    resetPlayerData(player)
 end)
 
 shared.GetEquippedBot = function(Player, botID)

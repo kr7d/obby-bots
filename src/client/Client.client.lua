@@ -731,6 +731,13 @@ end)
 
 
 
+--// Rebirth
+Frames.Rebirth.ProgressBar.Bar.Activated:Connect(function()
+    Remotes.Rebirth:FireServer()
+end)
+
+
+
 --// Lighting
 local sky = Lighting:WaitForChild("LCSky")
 sky.SkyboxBk = "rbxassetid://246894245"

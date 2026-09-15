@@ -1,17 +1,18 @@
+local module = {}
+
+--// Services
 local RS = game:GetService("ReplicatedStorage")
 local Lighting = game:GetService("Lighting")
 local Players = game:GetService("Players")
 
+--// Modules
 local Modules = RS.Modules
 local spr = require(Modules.Utilities.spr)
 local Typewrite = require(Modules.Utilities.Typewrite)
 
+--// Variables
 local player = Players.LocalPlayer
-
---// Lighting
 local fov = game:GetService("Workspace"):WaitForChild("Camera")
-
-local module = {}
 
 local DEBOUNCE = 0.35
 local lastActivation = setmetatable({}, {__mode = "k"})

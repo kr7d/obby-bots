@@ -17,6 +17,7 @@ if player.Parent == nil then return end
 local Modules = RS.Modules
 local Utilities = require(Modules.Utilities)
 local Settings = require(RS["Game Settings"].Settings)
+local IconManager = require(Modules.IconManager)
 
 --// Variables
 local playerData = player.Data.PlayerData
@@ -41,14 +42,18 @@ local function updateRebirthLabel()
     local creditReq = Settings["REBIRTH_BASE_COST"] * (9^playerData.Rebirth.Value)
     local progress = math.round(credits / creditReq * 100) / 100
     local progressBar = UI.Canvas.Frames.Rebirth.ProgressBar
-    progressBar.Bar.Size = UDim2.fromScale(math.min(progress, 1), 1)
+    local rebirthIcon = IconManager.getRebirthIcon()
     if credits < creditReq then
         progressBar.Bar.Interactable = false
         progressBar.Progress.Text = Utilities.Short.en(credits).."/"..Utilities.Short.en(creditReq).."¢"
+        rebirthIcon:clearNotices()
     else
         progressBar.Bar.Interactable = true
         progressBar.Progress.Text = "REBIRTH"
+        rebirthIcon:clearNotices()
+        rebirthIcon:notify()
     end
+    progressBar.Bar.Size = UDim2.fromScale(math.min(progress, 1), 1)
 end
 
 local oldCredits = nil

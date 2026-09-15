@@ -12,6 +12,7 @@ local Lighting = game:GetService("Lighting")
 local Modules = RS:WaitForChild("Modules")
 local Utilities = require(Modules.Utilities)
 local Settings = require(RS["Game Settings"].Settings)
+local IconManager = require(Modules.IconManager)
 
 --// Remotes
 local Remotes = RS:WaitForChild("Remotes")
@@ -670,8 +671,9 @@ local function promptSelectStarterBot()
 	if not Buttons.InventoryButton:FindFirstChild("Spotlight") then
 		this:WaitForChild("Spotlight"):Clone().Parent = Buttons.InventoryButton
 	end
+    IconManager.getSettingsIcon():lock()
+    IconManager.getRebirthIcon():lock()
 	Buttons.InventoryButton.Interactable = true
-	Buttons.SettingsButton.Interactable = false
 	Buttons.ShopButton.Interactable = false
 	Buttons.SpectateButton.Interactable = false
 	Frames.Inventory.Slots.ScrollingEnabled = false
@@ -709,8 +711,9 @@ end)
 player.ChildAdded:Connect(function(c)
 	if c.Name ~= "TutorialCompleted" then return end
 	tutorialComplete = c
+    IconManager.getSettingsIcon():unlock()
+    IconManager.getRebirthIcon():unlock()
 	Buttons.InventoryButton.Interactable = true
-	Buttons.SettingsButton.Interactable = true
 	Buttons.ShopButton.Interactable = true
 	Buttons.SpectateButton.Interactable = true
 	Frames.Inventory.Slots.ScrollingEnabled = true

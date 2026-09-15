@@ -1,8 +1,12 @@
 local RS = game:GetService("ReplicatedStorage")
 local Lighting = game:GetService("Lighting")
+local Players = game:GetService("Players")
 
 local Modules = RS.Modules
 local spr = require(Modules.Utilities.spr)
+local Typewrite = require(Modules.Utilities.Typewrite)
+
+local player = Players.LocalPlayer
 
 --// Lighting
 local fov = game:GetService("Workspace"):WaitForChild("Camera")
@@ -105,5 +109,10 @@ function module.PointVPFToObject(object, viewportFrame)
 	return object
 end
 
+function module.Dialogue(speaker, text)
+    local dialogue = player.PlayerGui.UI.Canvas.Dialogue
+    dialogue.Button.Speaker.Text = speaker
+    Typewrite.Create(dialogue.Button.TextLabel, text)
+end
 
 return module

@@ -12,7 +12,7 @@ local Icon = require(Modules.IconManager.Icon)
 --// Variables
 local this = Modules.IconManager
 local player = Players.LocalPlayer
-local UI = player.PlayerGui.UI
+local UI = player.PlayerGui:WaitForChild("UI")
 
 --// Icons
 local settingsIcon = Icon.new()

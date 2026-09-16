@@ -21,12 +21,15 @@ function module.Create(dialogueData: {{speaker: model, text: string}})
     local dialogue = UI.Canvas.Dialogue
     dialogue.Visible = true
     local connection = Instance.new("BindableEvent")
+    local freeVPF = function() end
     local thread = task.spawn(function()
         for _, line in dialogueData do
-            Utilities.UI.PointVPFToObject(line.speaker, dialogue.Button.Display)
+            local _, free = Utilities.UI.PointVPFToObject(line.speaker, dialogue.Button.Display)
+            freeVPF = free
             dialogue.Button.Display.TextLabel.Text = line.speaker.Name
             Utilities.Typewrite.Create(dialogue.Button.TextLabel, line.text)
             connection.Event:Wait()
+            freeVPF()
         end
         UI.Canvas.Dialogue.Visible = false
         connection:Destroy()
@@ -35,6 +38,7 @@ function module.Create(dialogueData: {{speaker: model, text: string}})
         if coroutine.status(thread) == "dead" then return end
         task.cancel(thread)
         UI.Canvas.Dialogue.Visible = false
+        freeVPF()
         connection:Destroy()
     end
     return connection, cancel

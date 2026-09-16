@@ -116,11 +116,11 @@ function module.PointVPFToObject(object, viewportFrame, hasAnimation)
 
 	camera.Parent = viewportFrame
 
-    local function clear()
+    local function free()
         camera:Destroy()
         clone:Destroy()
     end
-	return clone, clear
+	return clone, free
 end
 
 return module

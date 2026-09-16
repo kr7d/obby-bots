@@ -17,7 +17,9 @@ if player.Parent == nil then return end
 local character = player.Character
 
 --// Modules
+local Modules = RS:WaitForChild("Modules")
 local timerModule = require(player.PlayerGui.Record.Record.TimerModule)
+local Tutorial = require(Modules.Tutorial)
 
 --// Remotes
 local Remotes = RS.Remotes
@@ -202,6 +204,9 @@ RunService.RenderStepped:Connect(function()
 		if currentZone and currentZone == startZones then
 			if isRecording.Value then return end
 			record(true)
+            if isTutorialInProgress and not Tutorial.debounceStep2 then
+                Tutorial.step2()
+			end
 		end
 		-- TouchBegan: ValidZone
 		if zone == validZones and not inValidZone then
@@ -217,18 +222,16 @@ RunService.RenderStepped:Connect(function()
 			timerModule.resetTimer()
 			stopRecording()
 			currentZone = zone
-			if isTutorialInProgress then
-				game.Workspace.Obbies["Obby Lobby"].Obby.StartHighlight.Transparency = 1
-				game.Workspace.Obbies["Obby Lobby"].Obby.EndHighlight.Transparency = 0
+			if isTutorialInProgress and not Tutorial.debounceStep1 then
+                Tutorial.step1()
 			end
 		-- TouchBegan: End Zone
 		elseif zone == endZones and query.Name == currentObby then
 			if not isRecording.Value then return end
 			record(false)
 			currentZone = zone
-			if isTutorialInProgress then
-				game.Workspace.Obbies["Obby Lobby"].Obby.StartHighlight.Transparency = 1
-				game.Workspace.Obbies["Obby Lobby"].Obby.EndHighlight.Transparency = 1
+			if isTutorialInProgress and not Tutorial.debounceStep3 then
+                Tutorial.step3()
 			end
 		end
 	elseif not query[1] and not query[2] then
@@ -239,8 +242,7 @@ RunService.RenderStepped:Connect(function()
 			timerModule.resetTimer()
 			stopRecording()
 			if isTutorialInProgress then
-				game.Workspace.Obbies["Obby Lobby"].Obby.StartHighlight.Transparency = 0
-				game.Workspace.Obbies["Obby Lobby"].Obby.EndHighlight.Transparency = 1
+                Tutorial.reset()
 			end
 			SetCurrentObby:FireServer("NONE")
 		end

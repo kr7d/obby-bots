@@ -20,7 +20,7 @@ function module.Create(dialogueData: {{speaker: string, text: string}})
     local dialogue = UI.Canvas.Dialogue
     dialogue.Visible = true
     local connection = Instance.new("BindableEvent")
-    task.spawn(function()
+    local thread = task.spawn(function()
         for _, line in dialogueData do
             dialogue.Button.Speaker.Text = line.speaker
             Utilities.Typewrite.Create(dialogue.Button.TextLabel, line.text)
@@ -29,7 +29,13 @@ function module.Create(dialogueData: {{speaker: string, text: string}})
         UI.Canvas.Dialogue.Visible = false
         connection:Destroy()
     end)
-    return connection
+    local function cancel()
+        if coroutine.status(thread) == "dead" then return end
+        task.cancel(thread)
+        UI.Canvas.Dialogue.Visible = false
+        connection:Destroy()
+    end
+    return connection, cancel
 end
 
 

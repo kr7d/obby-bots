@@ -19,6 +19,7 @@ local function cancelAllThreads()
         if not thread or coroutine.status(thread) == "dead" then continue end
         task.cancel(thread)
     end
+    threads = {}
 end
 
 -- Executes when player touches Obby Lobby's StartZone

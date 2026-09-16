@@ -8,10 +8,7 @@ local Players = game:GetService("Players")
 --// Modules
 local Modules = RS.Modules
 local spr = require(Modules.Utilities.spr)
-local Typewrite = require(Modules.Utilities.Typewrite)
 
---// Variables
-local player = Players.LocalPlayer
 local fov = game:GetService("Workspace"):WaitForChild("Camera")
 
 local DEBOUNCE = 0.35
@@ -108,12 +105,6 @@ function module.PointVPFToObject(object, viewportFrame)
 
 	camera.Parent = viewportFrame
 	return object
-end
-
-function module.Dialogue(speaker, text)
-    local dialogue = player.PlayerGui.UI.Canvas.Dialogue
-    dialogue.Button.Speaker.Text = speaker
-    Typewrite.Create(dialogue.Button.TextLabel, text)
 end
 
 return module

@@ -137,10 +137,8 @@ function InitProbabilityFrames()
 			local Template = this.ProbTemplate:Clone()
 			Template.LayoutOrder = i
 			Template.BackgroundColor3 = Settings.Tiers[string.upper(RS.Assets.Bots[BotName].Settings.Rarity.Value)]["COLOR"]
-			local BotModel = RS.Assets.Bots[BotName]:Clone()
-			BotModel.Parent = Template.Display
 			
-			Utilities.UI.PointVPFToObject(BotModel, Template.Display)
+			Utilities.UI.PointVPFToObject(RS.Assets.Bots[BotName], Template.Display)
 			Template.Probability.Text = tostring(prob).."%"
 			Template.Name = BotName
 			Template.Parent = BillboardGui.ProbabilityFrame
@@ -186,10 +184,7 @@ function PopulateOpeningsFrame(result: table, Chest)
 			Template.Fields.Bonus.Visible = true
 		end
 		
-		local BotModel = RS.Assets.Bots[BotName]:Clone()
-		BotModel.Parent = Template.Display
-		
-		Utilities.UI.PointVPFToObject(BotModel, Template.Display)
+		Utilities.UI.PointVPFToObject(RS.Assets.Bots[BotName], Template.Display)
 		Template.Parent = UI.OpenChest.Openings.Frame.ScrollingFrame
 	end
 end
@@ -207,10 +202,10 @@ function ChestOpening(Chest: Instance, result: StringTable)
 	PopulateOpeningsFrame(result, Chest)
 	UI.OpenChest.Chest.Visible = true
 	
-	local ChestModel = Chest.Model:Clone()
-	ChestModel.Parent = UI.OpenChest.Chest.Tap.Display.WorldModel
+	-- local ChestModel = Chest.Model:Clone()
+	-- ChestModel.Parent = UI.OpenChest.Chest.Tap.Display.WorldModel
 	
-	Utilities.UI.PointVPFToObject(ChestModel, UI.OpenChest.Chest.Tap.Display)
+	local ChestModel = Utilities.UI.PointVPFToObject(Chest.Model, UI.OpenChest.Chest.Tap.Display, true)
 	
 	local Spin = 0
 	local Rotation = 0
@@ -532,10 +527,10 @@ function AddBot(BotFolder) -- BotFolder is the bot's folder in Player.Data.Bots
 	task.wait(0.1)
 	local template = this.BotTemplate:Clone()
 
-	local BotModel = RS.Assets.Bots[BotFolder.Name]:Clone()
-	BotModel.Parent = template.Display
+	-- local BotModel = RS.Assets.Bots[BotFolder.Name]:Clone()
+	-- BotModel.Parent = template.Display
 	
-	Utilities.UI.PointVPFToObject(BotModel, template.Display)
+	Utilities.UI.PointVPFToObject(RS.Assets.Bots[BotFolder.Name], template.Display)
 	template.Name = BotFolder.Name
 	template.Parent = BotFrame
 	

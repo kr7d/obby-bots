@@ -68,19 +68,30 @@ function module.DisplaySection(targetSection)
 end
 
 -- ChatGPT'd lel
-function module.PointVPFToObject(object, viewportFrame)
+function module.PointVPFToObject(object, viewportFrame, hasAnimation)
+    if not object:FindFirstChild("Main") then
+        warn("Missing Main part:", object.Name)
+        return
+    end
+
+    -- Create clone & assign its parent
+    local clone = object:Clone()
+    if hasAnimation then
+        if not viewportFrame:FindFirstChild("WorldModel") then
+            Instance.new("WorldModel").Parent = viewportFrame
+        end
+        clone.Parent = viewportFrame.WorldModel
+    else
+        clone.Parent = viewportFrame
+    end
+
+    local mainPart = clone:FindFirstChild("Main")
+
 	local camera = Instance.new("Camera")
 	viewportFrame.CurrentCamera = camera
 
-	-- Get Main part
-	local mainPart = object:FindFirstChild("Main")
-	if not mainPart then
-		warn("Object has no Main part:", object.Name)
-		return
-	end
-
 	-- Use bounding box just for size reference
-	local cf, size = object:GetBoundingBox()
+	local cf, size = clone:GetBoundingBox()
 
 	-- Compute distance based on size (simple method)
 	local maxDim = math.max(size.X, size.Y, size.Z)
@@ -104,7 +115,12 @@ function module.PointVPFToObject(object, viewportFrame)
 	camera.CFrame = CFrame.new(cameraPos, cf.Position)
 
 	camera.Parent = viewportFrame
-	return object
+
+    local function clear()
+        camera:Destroy()
+        clone:Destroy()
+    end
+	return clone, clear
 end
 
 return module

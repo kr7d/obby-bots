@@ -70,18 +70,4 @@ FinishedRecording.OnServerEvent:Connect(function(player, recording, totalFrames,
 	botModule.createBot(player, botID, elapsed, recording, obby, 0)
 	Remotes.SendNotification:FireClient(player, "NEW RECORD for Slot "..botID.." in "..obby.."!", "Tada2")
 	print("Bot created for "..player.Name..": "..botID)
-	
-	--if NumOfSlotsUsed >= nonSaveValues.BotCapacity.Value then
-	--	-- Bot limit has been reached -> check if we should replace any old bot
-	--	print(player.Name..": max bots reached.")
-	--	if botID ~= nil then
-	--		botModule.removeBotData(player, botID)
-	--		local obby = nonSaveValues.CurrentObby.Value
-	--		botModule.createBot(player, botID, elapsed, recording, obby, 0)
-	--	end
-	--else
-	--	-- Bot limit has not been reached -> create new bot
-	--	local obby = nonSaveValues.CurrentObby.Value
-	--	botModule.createBot(player, botID, elapsed, recording, obby, 0)
-	--end
 end)

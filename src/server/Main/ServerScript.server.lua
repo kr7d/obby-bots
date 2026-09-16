@@ -145,26 +145,25 @@ function ChooseRandomBot(Chest, LuckMultiplier)
 		table.insert(Bots, {BotName, Probability})
 	end
 
-	table.sort(Bots, function(a,b) -- sort by probability (highest probability -> 1st index)
+	table.sort(Bots, function(a,b)
 		return a[2] > b[2]
 	end)
 
-	local BaseChance = Bots[1][2] -- this is the most common bot's probability
+	local BaseChance = Bots[1][2]
 
-	for _, v in Bots do -- calculate total weight and adjust bot weights according to LuckMultiplier
-		local Chance = math.min(v[2] * LuckMultiplier, BaseChance) -- increases the odds of rarer bots
+	for _, v in Bots do
+		local Chance = math.min(v[2] * LuckMultiplier, BaseChance)
 		TotalWeight += Chance
 		v[2] = Chance
 	end
 
-	local Chance = Random.new():NextNumber(0,TotalWeight) -- pick a number from 0 to TotalWeight - 1
+	local Chance = Random.new():NextNumber(0,TotalWeight)
 	local Counter = 0
-	for _, v in Bots do -- loop from the easiest to the rarest bot
-		-- say Chance is 50 and the easiest bot is 60. 
-		Counter += v[2] -- Counter now is 60
-		if Counter >= Chance then -- since Counter >= Chance we return the easiest bot
+	for _, v in Bots do
+		Counter += v[2]
+		if Counter >= Chance then 
 			return v[1]
-		end -- else, repeat the process with the next easiest bot
+		end
 	end
 end
 

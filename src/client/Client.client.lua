@@ -202,9 +202,6 @@ function ChestOpening(Chest: Instance, result: StringTable)
 	PopulateOpeningsFrame(result, Chest)
 	UI.OpenChest.Chest.Visible = true
 	
-	-- local ChestModel = Chest.Model:Clone()
-	-- ChestModel.Parent = UI.OpenChest.Chest.Tap.Display.WorldModel
-	
 	local ChestModel = Utilities.UI.PointVPFToObject(Chest.Model, UI.OpenChest.Chest.Tap.Display, true)
 	
 	local Spin = 0
@@ -340,54 +337,12 @@ Remotes.UpdateBotList.OnClientEvent:Connect(function(Data)
 	end
 end)
 
---[[
-
-function updateSlot(Child)
-	local botID = tonumber(Child.Name)
-	if botID == nil then warn("Invalid child: Not a valid BotID name") return end
-	
-	local botMeta = (Remotes.GetPlayerBotData:InvokeServer())[botID]
-	if botMeta == nil then warn("Child not found in playerBots["..player.Name.."]") return end
-	if botMeta == -1 then return end
-	 
-	local slot = SlotsFrame[Child.Name]
-	slot.Fields.ObbyName.Text = "Obby: "..botMeta.ObbyName
-	slot.Fields.Wins.Text = "Wins: "..tostring(botMeta.Wins) 
-	slot.Fields.Time.Text = "Time: "..tostring(botMeta.Time)
-end
-
-function resetSlot(Child) -- when the player resets a bot slot
-	local botID = tonumber(Child.Name)
-	if botID == nil then warn("Invalid child: Not a valid BotID name") return end
-	
-	local botMeta = (Remotes.GetPlayerBotData:InvokeServer())[botID]
-	if botMeta == nil then warn("Child not found in playerBots["..player.Name.."]") return end
-	if botMeta ~= -1 then return end -- Bot is still in use
-
-	local slot = SlotsFrame[Child.Name]
-	slot.Fields.ObbyName.Text = "Obby: Unused"
-	slot.Fields.Wins.Text = "Wins: 0"
-	slot.Fields.Time.Text = "Time: 0.00"
-end
-
-WorkspaceBots.ChildAdded:Connect(updateSlot)
-WorkspaceBots.ChildRemoved:Connect(resetSlot)
-]]
-
-
 function setSelectMode(isSelectMode, botID) -- when player selects a bot slot to be changed
 	local targetFrame = isSelectMode and Frames.Inventory.Bots or SlotsFrame
 	task.spawn(function() Utilities.UI.DisplaySection(targetFrame) end)
 	Frames.Inventory.Buttons.Visible = not isSelectMode
 	Frames.Inventory.SelectMode.Visible = isSelectMode
 	Frames.Inventory.SelectMode.Heading.Text = botID and "Choose a bot for slot "..botID.."!" or ""
-	--if isSelectMode and tutorialComplete == nil then
-	--	if highlight then
-	--		highlight:Destroy()
-	--	end
-	--	highlight = this:WaitForChild("Highlight"):Clone()
-	--	highlight.Parent = Frames.Inventory.Bots.Starter
-	--end
 	slotSelected = botID and botID or nil
 	for _, v in Frames.Inventory.Bots:GetChildren() do
 		if not v:IsA("Frame") then continue end
@@ -513,22 +468,12 @@ function UpdateFields(BotFolder: Folder)
 	for _, x in pairs(UnusedSlots) do
 		resetSlotSelection(SlotsFrame[tostring(x)])
 	end
-	--[[
-	for _, v in SlotsFrame:GetChildren() do -- Delete bot from any other slot if it exists there
-		if not v:IsA("Frame") or tonumber(v.Name) == nil then continue end
-		if v.Fields.Title.ChangeButton.Fields.BotName.Text ~= BotFolder.Name then continue end
-		resetSlotSelection(v)
-	end
-	]]
 end
 
 function AddBot(BotFolder) -- BotFolder is the bot's folder in Player.Data.Bots
 	if not RS.Assets.Bots:FindFirstChild(BotFolder.Name) then warn(BotFolder.Name.." not found") return end
 	task.wait(0.1)
 	local template = this.BotTemplate:Clone()
-
-	-- local BotModel = RS.Assets.Bots[BotFolder.Name]:Clone()
-	-- BotModel.Parent = template.Display
 	
 	Utilities.UI.PointVPFToObject(RS.Assets.Bots[BotFolder.Name], template.Display)
 	template.Name = BotFolder.Name

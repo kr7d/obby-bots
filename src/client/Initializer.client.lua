@@ -129,14 +129,6 @@ player:WaitForChild("NonSaveValues"):WaitForChild("CurrentObby"):GetPropertyChan
 	LightingManager:ResetLighting()
 	ClientParts:ClearAllChildren()
 	task.defer(requestObjects, currentlyLoadedObby)
-
-	--player.CharacterAdded:Connect(function()
-	--	for _, folder in pairs(workspace.Obbies:GetChildren()) do
-	--		if folder:FindFirstChild(currentObby.."_ClientFolder") then
-	--			folder[currentObby.."_ClientFolder"]:Destroy()
-	--		end
-	--	end
-	--end)
 end)
 
 shared.ResetAtStart = function()

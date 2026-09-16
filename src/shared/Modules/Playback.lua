@@ -114,11 +114,6 @@ PlaybackModule.Play = function(Owner, Id, Recording, Time, BotName)
 	else
 		Rig = script:WaitForChild("PlaybackRig"):Clone()
 	end
-	--if script:FindFirstChild("PlayerRigs") and script.PlayerRigs:FindFirstChild(Owner.Name) then
-		--Rig = script.PlayerRigs[Owner.Name]:Clone()
-	--else
-		--Rig = script:WaitForChild("PlaybackRig"):Clone()
-	--end
 	for _, x in pairs(Rig:GetDescendants()) do
 		if x:IsA("BasePart") then
 			x.Transparency += 0.5

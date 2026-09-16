@@ -15,14 +15,16 @@ if player.Parent == nil then return end
 
 --// Variables
 local UI = player.PlayerGui:WaitForChild("UI")
+local Assets = RS:WaitForChild("Assets")
 
-function module.Create(dialogueData: {{speaker: string, text: string}})
+function module.Create(dialogueData: {{speaker: model, text: string}})
     local dialogue = UI.Canvas.Dialogue
     dialogue.Visible = true
     local connection = Instance.new("BindableEvent")
     local thread = task.spawn(function()
         for _, line in dialogueData do
-            dialogue.Button.Speaker.Text = line.speaker
+            Utilities.UI.PointVPFToObject(line.speaker, dialogue.Button.Display)
+            dialogue.Button.Display.TextLabel.Text = line.speaker.Name
             Utilities.Typewrite.Create(dialogue.Button.TextLabel, line.text)
             connection.Event:Wait()
         end

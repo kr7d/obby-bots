@@ -22,6 +22,8 @@ local function cancelAllThreads()
     threads = {}
 end
 
+local starter = RS:WaitForChild("Assets").Bots.Starter
+
 -- Executes when player touches Obby Lobby's StartZone
 function Tutorial.step1()
     threads[1] = task.spawn(function()
@@ -30,8 +32,8 @@ function Tutorial.step1()
         game.Workspace.Obbies["Obby Lobby"].Obby.StartHighlight.Transparency = 1
         game.Workspace.Obbies["Obby Lobby"].Obby.EndHighlight.Transparency = 0
         local dialogueData = {
-            {speaker = "Starter", text = "Welcome to your first obby!"},
-            {speaker = "Starter", text = "Begin recording yourself by stepping out of the green <font color='rgb(0,255,0)'>Start Zone</font>."},
+            {speaker = starter, text = "Welcome to your first obby!"},
+            {speaker = starter, text = "Begin recording yourself by stepping out of the green <font color='rgb(0,255,0)'>Start Zone</font>."},
         }
         local dialogue, cancel = DialogueManager.Create(dialogueData)
         cancelDialogue = cancel
@@ -47,7 +49,7 @@ function Tutorial.step2()
         cancelDialogue()
         Tutorial.debounceStep2 = true
         local dialogueData = {
-            {speaker = "Starter", text = "Get to the red <font color='rgb(255,0,0)'>End Zone</font> as fast as possible!"}
+            {speaker = starter, text = "Get to the red <font color='rgb(255,0,0)'>End Zone</font> as fast as possible!"}
         }
         local dialogue, cancel = DialogueManager.Create(dialogueData)
         cancelDialogue = cancel
@@ -63,7 +65,7 @@ function Tutorial.step3()
         game.Workspace.Obbies["Obby Lobby"].Obby.StartHighlight.Transparency = 1
         game.Workspace.Obbies["Obby Lobby"].Obby.EndHighlight.Transparency = 1
         local dialogueData = {
-            {speaker = "Starter", text = "Congrats on beating your first obby!"}
+            {speaker = starter, text = "Congrats on beating your first obby!"}
         }
         local dialogue, cancel = DialogueManager.Create(dialogueData)
         cancelDialogue = cancel

@@ -59,19 +59,10 @@ end
 -- Executes when player touches Obby Lobby's EndZone when recording
 function Tutorial.step3()
     cancelAllThreads()
-    threads[3] = task.spawn(function()
-        cancelDialogue()
-        Tutorial.debounceStep3 = true
-        game.Workspace.Obbies["Obby Lobby"].Obby.StartHighlight.Transparency = 1
-        game.Workspace.Obbies["Obby Lobby"].Obby.EndHighlight.Transparency = 1
-        local dialogueData = {
-            {speaker = starter, text = "Congrats on beating your first obby!"}
-        }
-        local dialogue, cancel = DialogueManager.Create(dialogueData)
-        cancelDialogue = cancel
-        task.wait(5)
-        dialogue:Fire()
-    end)
+    cancelDialogue()
+    Tutorial.debounceStep3 = true
+    game.Workspace.Obbies["Obby Lobby"].Obby.StartHighlight.Transparency = 1
+    game.Workspace.Obbies["Obby Lobby"].Obby.EndHighlight.Transparency = 1
 end
 
 function Tutorial.reset()

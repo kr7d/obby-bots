@@ -4,7 +4,7 @@ local FeatureFlags = {}
 type FlagName = "InventoryStep"
 
 local FLAGS = {
-    InventoryStep = false,
+    InventoryStep = true,
 }
 
 function FeatureFlags.isEnabled(flagName: FlagName): boolean

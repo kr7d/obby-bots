@@ -116,30 +116,38 @@ local function destroyPulse(element)
     element.Pulse:Destroy()
 end
 
-local function promptInventory()
-    local inventoryButton = UI.Canvas.Buttons.InventoryButton
-    if not inventoryButton:FindFirstChild("Spotlight") then
-		Assets.Spotlight:Clone().Parent = UI.Canvas.Buttons.InventoryButton
-	end
-    setLockForUI(true)
-    inventoryButton.Interactable = true
-    local debounce = false
-    inventoryButton.Activated:Connect(function()
-        if debounce then return end
-        inventoryButton.Interactable = false
-        inventoryButton.Spotlight:Destroy()
-        createPulse(UI.Canvas.Frames.Inventory.Slots["1"].Fields.Title.ChangeButton)
-        createPulse(UI.Canvas.Frames.Inventory.Bots.Starter)
-    end)
-    UI.Canvas.Frames.Inventory.Bots:WaitForChild("Starter").Select.Activated:Connect(function()
-        if debounce then return end
-        debounce = true
+local isInventoryPrompted = false
+
+local inventoryConnection
+inventoryConnection = UI.Canvas.Buttons.InventoryButton.Activated:Connect(function()
+    if not isInventoryPrompted then return end
+    inventoryConnection:Disconnect()
+    UI.Canvas.Buttons.InventoryButton.Interactable = false
+    UI.Canvas.Buttons.InventoryButton.Spotlight:Destroy()
+    createPulse(UI.Canvas.Frames.Inventory.Slots["1"].Fields.Title.ChangeButton)
+    createPulse(UI.Canvas.Frames.Inventory.Bots.Starter)
+end)
+
+local starterConnection
+task.spawn(function() -- Spawn a new thread to prevent WaitForChild yielding the main thread
+    starterConnection = UI.Canvas.Frames.Inventory.Bots:WaitForChild("Starter").Select.Activated:Connect(function()
+        if not isInventoryPrompted then return end
+        starterConnection:Disconnect()
         setLockForUI(false)
         player.Character.Humanoid.WalkSpeed = 16
         player.Character.Humanoid.JumpPower = 50
         destroyPulse(UI.Canvas.Frames.Inventory.Slots["1"].Fields.Title.ChangeButton)
         destroyPulse(UI.Canvas.Frames.Inventory.Bots.Starter)
     end)
+end)
+
+local function promptInventory()
+    isInventoryPrompted = true
+    if not UI.Canvas.Buttons.InventoryButton:FindFirstChild("Spotlight") then
+		Assets.Spotlight:Clone().Parent = UI.Canvas.Buttons.InventoryButton
+	end
+    setLockForUI(true)
+    UI.Canvas.Buttons.InventoryButton.Interactable = true
 end
 
 -- Executes on join or when player's win value changes

@@ -5,7 +5,11 @@ local RS = game:GetService("ReplicatedStorage")
 
 --// Modules
 local Modules = RS:WaitForChild("Modules")
+local Assets = RS:WaitForChild("Assets")
 local DialogueManager = require(Modules.DialogueManager)
+local IconManager = require(Modules.IconManager)
+local GS = RS:WaitForChild("Game Settings")
+local FeatureFlags = require(GS.FeatureFlags)
 
 local cancelDialogue = function() end -- Function to cancel current dialogue thread
 
@@ -22,7 +26,14 @@ local function cancelAllThreads()
     threads = {}
 end
 
+--// Player & Loading
+local player = game.Players.LocalPlayer
+repeat wait() until player:FindFirstChild("Loaded") and player.Loaded.Value or player.Parent == nil
+
+if player.Parent == nil then return end
+
 local starter = RS:WaitForChild("Assets").Bots.Starter
+local UI = player.PlayerGui:WaitForChild("UI")
 
 -- Executes when player touches Obby Lobby's StartZone
 function Tutorial.step1()
@@ -63,6 +74,7 @@ function Tutorial.step3()
     Tutorial.debounceStep3 = true
     game.Workspace.Obbies["Obby Lobby"].Obby.StartHighlight.Transparency = 1
     game.Workspace.Obbies["Obby Lobby"].Obby.EndHighlight.Transparency = 1
+    UI.Canvas.Buttons.Visible = true
 end
 
 function Tutorial.reset()
@@ -73,6 +85,73 @@ function Tutorial.reset()
     Tutorial.debounceStep3 = false
     game.Workspace.Obbies["Obby Lobby"].Obby.StartHighlight.Transparency = 0
     game.Workspace.Obbies["Obby Lobby"].Obby.EndHighlight.Transparency = 1
+end
+
+local function setLockForUI(lock: boolean)
+    if lock == true then
+        IconManager.getSettingsIcon():lock()
+        IconManager.getRebirthIcon():lock()
+    else
+        IconManager.getSettingsIcon():unlock()
+        IconManager.getRebirthIcon():unlock()
+    end
+	UI.Canvas.Buttons.InventoryButton.Interactable = not lock
+	UI.Canvas.Buttons.ShopButton.Interactable = not lock
+	UI.Canvas.Buttons.SpectateButton.Interactable = not lock
+	UI.Canvas.Frames.Inventory.Slots.ScrollingEnabled = not lock
+    UI.Canvas.Frames.Inventory.Slots["1"].Fields.ResetButton.Interactable = not lock
+	for _, v in UI.Canvas.Frames.Inventory.Buttons:GetChildren() do
+		if not v:IsA("GuiButton") then continue end
+		v.Interactable = not lock
+	end
+end
+
+local function createPulse(element)
+	if element:FindFirstChild("Pulse") then return end
+    Assets.Pulse:Clone().Parent = element
+end
+
+local function destroyPulse(element)
+	if not element:FindFirstChild("Pulse") then return end
+    element.Pulse:Destroy()
+end
+
+local function promptInventory()
+    local inventoryButton = UI.Canvas.Buttons.InventoryButton
+    if not inventoryButton:FindFirstChild("Spotlight") then
+		Assets.Spotlight:Clone().Parent = UI.Canvas.Buttons.InventoryButton
+	end
+    setLockForUI(true)
+    inventoryButton.Interactable = true
+    local debounce = false
+    inventoryButton.Activated:Connect(function()
+        if debounce then return end
+        inventoryButton.Interactable = false
+        inventoryButton.Spotlight:Destroy()
+        createPulse(UI.Canvas.Frames.Inventory.Slots["1"].Fields.Title.ChangeButton)
+        createPulse(UI.Canvas.Frames.Inventory.Bots.Starter)
+    end)
+    UI.Canvas.Frames.Inventory.Bots:WaitForChild("Starter").Select.Activated:Connect(function()
+        if debounce then return end
+        debounce = true
+        setLockForUI(false)
+        player.Character.Humanoid.WalkSpeed = 16
+        player.Character.Humanoid.JumpPower = 50
+        destroyPulse(UI.Canvas.Frames.Inventory.Slots["1"].Fields.Title.ChangeButton)
+        destroyPulse(UI.Canvas.Frames.Inventory.Bots.Starter)
+    end)
+end
+
+-- Executes on join or when player's win value changes
+function Tutorial.inventoryStep()
+    -- TODO: Remove flag
+    if not FeatureFlags.isEnabled("InventoryStep") then return end
+    if player:FindFirstChild("TutorialCompleted") then return end
+    if player.Data.PlayerData.Wins.Value < 1 then return end
+    if player.Data.Bots.Starter:GetAttribute("SlotEquipped") == 1 then return end
+    player.Character.Humanoid.WalkSpeed = 0
+	player.Character.Humanoid.JumpPower = 0
+    promptInventory()
 end
 
 return Tutorial

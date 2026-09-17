@@ -1,10 +1,10 @@
 --!strict
 local FeatureFlags = {}
 
-type FlagName = "TutorialClearEnabled"
+type FlagName = "InventoryStep"
 
 local FLAGS = {
-    TutorialClearEnabled = false,
+    InventoryStep = false,
 }
 
 function FeatureFlags.isEnabled(flagName: FlagName): boolean

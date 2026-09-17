@@ -13,6 +13,7 @@ local Modules = RS:WaitForChild("Modules")
 local Utilities = require(Modules.Utilities)
 local Settings = require(RS["Game Settings"].Settings)
 local IconManager = require(Modules.IconManager)
+local Tutorial = require(Modules.Tutorial)
 
 --// Remotes
 local Remotes = RS:WaitForChild("Remotes")
@@ -605,72 +606,14 @@ end)
 
 
 --// Tutorial
-local tutorialComplete = player:FindFirstChild("TutorialCompleted")
-
-local function promptSelectStarterBot()
-	if not Buttons.InventoryButton:FindFirstChild("Spotlight") then
-		this:WaitForChild("Spotlight"):Clone().Parent = Buttons.InventoryButton
-	end
-    IconManager.getSettingsIcon():lock()
-    IconManager.getRebirthIcon():lock()
-	Buttons.InventoryButton.Interactable = true
-	Buttons.ShopButton.Interactable = false
-	Buttons.SpectateButton.Interactable = false
-	Frames.Inventory.Slots.ScrollingEnabled = false
-	Frames.Inventory.Slots.CanvasPosition = Vector2.new(0,0)
-	character.Humanoid.WalkSpeed = 0
-	character.Humanoid.JumpPower = 0
-	for _, v in Frames.Inventory.Buttons:GetChildren() do
-		if not v:IsA("GuiButton") then continue end
-		v.Interactable = false
-	end
-	Frames.Inventory.Slots["1"].Fields.ResetButton.Interactable = false
-	if not Frames.Inventory.Slots["1"].Fields.Title.ChangeButton:FindFirstChild("Pulse") then
-		this:WaitForChild("Pulse"):Clone().Parent = Frames.Inventory.Slots["1"].Fields.Title.ChangeButton
-	end
-	if not Frames.Inventory.Bots:WaitForChild("Starter"):FindFirstChild("Pulse") then
-		this:WaitForChild("Pulse"):Clone().Parent = Frames.Inventory.Bots.Starter
-	end
-end
-
 if PlayerData.Wins.Value > 0 then
 	game.Workspace.Obbies["Obby Lobby"].Obby.StartHighlight.Transparency = 1
 	game.Workspace.Obbies["Obby Lobby"].Obby.EndHighlight.Transparency = 1
 	Buttons.Visible = true
-	if not tutorialComplete then
-		promptSelectStarterBot()
-	end
 end
 
-PlayerData.Wins.Changed:Connect(function(value)
-	if tutorialComplete or value <= 0 then return end
-	Buttons.Visible = true
-	promptSelectStarterBot()
-end)
-
-player.ChildAdded:Connect(function(c)
-	if c.Name ~= "TutorialCompleted" then return end
-	tutorialComplete = c
-    IconManager.getSettingsIcon():unlock()
-    IconManager.getRebirthIcon():unlock()
-	Buttons.InventoryButton.Interactable = true
-	Buttons.ShopButton.Interactable = true
-	Buttons.SpectateButton.Interactable = true
-	Frames.Inventory.Slots.ScrollingEnabled = true
-	character.Humanoid.WalkSpeed = 16
-	character.Humanoid.JumpPower = 50
-	for _, v in Frames.Inventory.Buttons:GetChildren() do
-		if not v:IsA("GuiButton") then continue end
-		v.Interactable = true
-	end
-	Frames.Inventory.Slots["1"].Fields.ResetButton.Interactable = true
-	if Frames.Inventory.Slots["1"].Fields.Title.ChangeButton:FindFirstChild("Pulse") then
-		Frames.Inventory.Slots["1"].Fields.Title.ChangeButton.Pulse:Destroy()
-	end
-	if Frames.Inventory.Bots:WaitForChild("Starter"):FindFirstChild("Pulse") then
-		Frames.Inventory.Bots.Starter.Pulse:Destroy()
-	end
-end)
+PlayerData.Wins.Changed:Connect(Tutorial.inventoryStep)
+Tutorial.inventoryStep()
 
 
 

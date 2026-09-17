@@ -85,11 +85,5 @@ for _, button in pairs(buttons) do
 
 	button.Activated:Connect(function()
 		Utilities.UI.DisplayFrame(targetFrame, config)
-		if button.Name == "InventoryButton" and not player:FindFirstChild("TutorialCompleted") then
-			if button:FindFirstChild("Spotlight") then
-				button.Spotlight:Destroy()
-			end
-			button.Interactable = false
-		end
 	end)
 end

@@ -116,11 +116,6 @@ Remotes.ChangeBot.OnServerEvent:Connect(function(player, botID, botName)
 			break
 		end
 	end
-	if botName == "Starter" and player:FindFirstChild("TutorialCompleted") == nil then
-		local tutorialCompleted = Instance.new("BoolValue")
-		tutorialCompleted.Name = "TutorialCompleted"
-		tutorialCompleted.Parent = player
-	end
  	bot:SetAttribute("SlotEquipped", botID)
 	if botModule.playerBots[player][botID] ~= -1 then
 		if botModule.playerBots[player][botID].Start then

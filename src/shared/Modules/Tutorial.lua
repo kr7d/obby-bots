@@ -6,6 +6,7 @@ local RS = game:GetService("ReplicatedStorage")
 --// Modules
 local Modules = RS:WaitForChild("Modules")
 local Assets = RS:WaitForChild("Assets")
+local Remotes = RS:WaitForChild("Remotes")
 local DialogueManager = require(Modules.DialogueManager)
 local IconManager = require(Modules.IconManager)
 local GS = RS:WaitForChild("Game Settings")
@@ -118,29 +119,6 @@ end
 
 local isInventoryPrompted = false
 
-local inventoryConnection
-inventoryConnection = UI.Canvas.Buttons.InventoryButton.Activated:Connect(function()
-    if not isInventoryPrompted then return end
-    inventoryConnection:Disconnect()
-    UI.Canvas.Buttons.InventoryButton.Interactable = false
-    UI.Canvas.Buttons.InventoryButton.Spotlight:Destroy()
-    createPulse(UI.Canvas.Frames.Inventory.Slots["1"].Fields.Title.ChangeButton)
-    createPulse(UI.Canvas.Frames.Inventory.Bots.Starter)
-end)
-
-local starterConnection
-task.spawn(function() -- Spawn a new thread to prevent WaitForChild yielding the main thread
-    starterConnection = UI.Canvas.Frames.Inventory.Bots:WaitForChild("Starter").Select.Activated:Connect(function()
-        if not isInventoryPrompted then return end
-        starterConnection:Disconnect()
-        setLockForUI(false)
-        player.Character.Humanoid.WalkSpeed = 16
-        player.Character.Humanoid.JumpPower = 50
-        destroyPulse(UI.Canvas.Frames.Inventory.Slots["1"].Fields.Title.ChangeButton)
-        destroyPulse(UI.Canvas.Frames.Inventory.Bots.Starter)
-    end)
-end)
-
 local function promptInventory()
     isInventoryPrompted = true
     if not UI.Canvas.Buttons.InventoryButton:FindFirstChild("Spotlight") then
@@ -161,5 +139,63 @@ function Tutorial.inventoryStep()
 	player.Character.Humanoid.JumpPower = 0
     promptInventory()
 end
+
+local isSpectatePrompted = false
+
+local function promptSpectate()
+    isSpectatePrompted = true
+end
+
+-- Executes on join or after starterConnection triggers
+function Tutorial.spectateStep()
+    -- TODO: Remove flag
+    if not FeatureFlags.isEnabled("SpectateStep") then return end
+    if player:FindFirstChild("TutorialCompleted") then return end
+    if player.Data.Bots.Starter:GetAttribute("SlotEquipped") ~= 1 then print("Starter not equipped to Slot 1") return end
+    promptSpectate()
+    createPulse(UI.Canvas.Buttons.SpectateButton)
+end
+
+local inventoryConnection
+inventoryConnection = UI.Canvas.Buttons.InventoryButton.Activated:Connect(function()
+    if not isInventoryPrompted then return end
+    inventoryConnection:Disconnect()
+    UI.Canvas.Buttons.InventoryButton.Interactable = false
+    UI.Canvas.Buttons.InventoryButton.Spotlight:Destroy()
+    createPulse(UI.Canvas.Frames.Inventory.Slots["1"].Fields.Title.ChangeButton)
+    createPulse(UI.Canvas.Frames.Inventory.Bots.Starter)
+end)
+
+local starterConnection
+task.spawn(function() -- Spawn a new thread to prevent WaitForChild yielding the main thread
+    starterConnection = UI.Canvas.Frames.Inventory.Bots:WaitForChild("Starter").Select.Activated:Connect(function()
+        if not isInventoryPrompted then return end
+        starterConnection:Disconnect()
+        setLockForUI(false)
+        player.Character.Humanoid.WalkSpeed = 16
+        player.Character.Humanoid.JumpPower = 50
+        destroyPulse(UI.Canvas.Frames.Inventory.Slots["1"].Fields.Title.ChangeButton)
+        destroyPulse(UI.Canvas.Frames.Inventory.Bots.Starter)
+        threads[3] = task.spawn(function()
+            local dialogueData = {
+                {speaker = starter, text = "Great, now I'm completing this obby and earning credits for you!"}
+            }
+            local dialogue, cancel = DialogueManager.Create(dialogueData)
+            cancelDialogue = cancel
+            task.wait(5)
+            dialogue:Fire()
+        end)
+        task.wait(0.5) -- Give time for starter's "SlotEquipped" attribute to be set
+        Tutorial.spectateStep()
+    end)
+end)
+
+local spectateConnection
+spectateConnection = UI.Canvas.Buttons.SpectateButton.Activated:Connect(function()
+    if not isSpectatePrompted then return end
+    spectateConnection:Disconnect()
+    Remotes.TutorialCompleted:FireServer()
+    destroyPulse(UI.Canvas.Buttons.SpectateButton)
+end)
 
 return Tutorial

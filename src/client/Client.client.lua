@@ -614,8 +614,7 @@ end
 
 PlayerData.Wins.Changed:Connect(Tutorial.inventoryStep)
 Tutorial.inventoryStep()
-
-
+Tutorial.spectateStep()
 
 --// Rebirth
 Frames.Rebirth.ProgressBar.Bar.Activated:Connect(function()

@@ -1,10 +1,11 @@
 --!strict
 local FeatureFlags = {}
 
-type FlagName = "InventoryStep"
+type FlagName = "InventoryStep" | "SpectateStep"
 
 local FLAGS = {
     InventoryStep = true,
+    SpectateStep = true
 }
 
 function FeatureFlags.isEnabled(flagName: FlagName): boolean

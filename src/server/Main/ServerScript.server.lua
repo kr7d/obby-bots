@@ -241,6 +241,12 @@ Remotes.Rebirth.OnServerEvent:Connect(function(player)
     player:LoadCharacter()
 end)
 
+Remotes.TutorialCompleted.OnServerEvent:Connect(function(player)
+    local tutorialCompleted = Instance.new("BoolValue")
+    tutorialCompleted.Name = "TutorialCompleted"
+    tutorialCompleted.Parent = player
+end)
+
 shared.GetEquippedBot = function(Player, botID)
 	local Data = Player:FindFirstChild("Data")
 	if Data then

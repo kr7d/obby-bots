@@ -20,12 +20,18 @@ This repo is the full source for the game, synced with [Rojo](https://rojo.space
 - [Roadmap](#roadmap)
 - [Notes](#notes)
 
-## Gameplay
+## Gameplay Loop
 
-1. A player completes one of many short (~10-30 second) obbies.
-2. Their run is recorded into one of their bot recording slots (3 by default, 4 with the relevant gamepass).
-3. A **replay bot** spawns and automatically re-runs that recording forever, earning credits on each completed loop.
-4. Players can keep re-attempting an obby to shave down their personal best — a faster recorded time makes the bot complete its loop quicker, increasing credit throughput.
+**Step 1:** A player completes one of many short (~10-30 second) obbies.\
+<img src="https://i.imgur.com/d54SxzR.gif" width="500" alt="Player recording themselves completing an obby">
+
+**Step 2:** Their run is recorded into one of their recording slots. The player then assigns a **replay bot** to that recording slot.\
+<img src="https://i.imgur.com/N3rJzgO.gif" width="500" alt="Player setting starter bot to Slot 1">
+
+**Step 3:** That replay bot spawns and automatically re-runs that recording forever, earning credits on each completed loop.\
+<img src="https://i.imgur.com/0tbmgKT.gif" width="500" alt="Bot replaying the player's recording">
+
+> Players can keep re-attempting an obby to shave down their personal best — a faster recorded time makes the bot complete its loop quicker, increasing credit throughput.
 
 ### Recording Slot Logic
 
@@ -36,7 +42,6 @@ This repo is the full source for the game, synced with [Rojo](https://rojo.space
 
 > Players can also manually delete a slot's recording to free it up.
 
-![Player recording themselves completing an obby](media/PlayerRun.gif)
 
 ## Bots: Unlocking & Upgrading
 

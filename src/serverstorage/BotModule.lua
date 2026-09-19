@@ -170,6 +170,7 @@ function botModule.updateList(player)
 				Time = botMeta.Time;
 				ObbyName = botMeta.ObbyName;
 				Wins = botMeta.Wins;
+                TimeMultiplier = botMeta.TimeMultiplier
 			}
 		end
 	end
@@ -183,6 +184,7 @@ function botModule.createBot(player, botID, elapsed, recording, obby, wins)
 		Recording = recording;
 		ObbyName = obby;
 		Wins = wins or 0;
+        TimeMultiplier = math.floor(botModule.calculateMultiplier(obby, elapsed) * 100) / 100
 	}
 	botModule.playerBots[player][botID] = newBot
 	--UpdateBotList:FireClient(player, newBot, botID)
@@ -312,6 +314,7 @@ function botModule.incrementStats(player, obbyName, elapsed, botID, botMultiplie
 	playerData.Credits.Value += creditsToAward
 	if botID == nil then return end
 	botModule.playerBots[player][botID].Wins += 1
+    botModule.playerBots[player][botID].TimeMultiplier = math.floor(multiplier * 100) / 100
 	botModule.updateList(player)
 end
 

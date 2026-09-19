@@ -333,7 +333,7 @@ Remotes.UpdateBotList.OnClientEvent:Connect(function(Data)
 			local slot = SlotsFrame[tostring(botID)]
 			slot.Fields.ObbyName.Text = "Obby: "..botMeta.ObbyName
 			slot.Fields.Wins.Text = "Wins: "..tostring(botMeta.Wins)
-			slot.Fields.Time.Text = "Time: "..tostring(botMeta.Time)
+			slot.Fields.Time.Text = "Time: "..tostring(botMeta.Time).." (<font color='rgb(255,255,255)'>"..tostring(botMeta.TimeMultiplier).."x</font>)"
 		end
 	end
 end)

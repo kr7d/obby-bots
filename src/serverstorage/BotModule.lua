@@ -178,9 +178,8 @@ function botModule.updateList(player)
 end
 
 function botModule.createBot(player, botID, elapsed, recording, obby, wins)
-	elapsed = math.round(elapsed*100)/100
 	local newBot = {
-		Time = elapsed;
+		Time = math.floor(elapsed*100)/100;
 		Recording = recording;
 		ObbyName = obby;
 		Wins = wins or 0;

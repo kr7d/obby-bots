@@ -11,9 +11,11 @@ local Lighting = game:GetService("Lighting")
 --// Module
 local Modules = RS:WaitForChild("Modules")
 local Utilities = require(Modules.Utilities)
-local Settings = require(RS["Game Settings"].Settings)
 local IconManager = require(Modules.IconManager)
 local Tutorial = require(Modules.Tutorial)
+local GS = RS:WaitForChild("Game Settings")
+local Settings = require(GS.Settings)
+local FeatureFlags = require(GS.FeatureFlags)
 
 --// Remotes
 local Remotes = RS:WaitForChild("Remotes")
@@ -615,6 +617,107 @@ end
 PlayerData.Wins.Changed:Connect(Tutorial.inventoryStep)
 Tutorial.inventoryStep()
 Tutorial.spectateStep()
+
+
+
+--// Profile
+local plrStats = {}
+
+local function sortProfiles()
+    local plrStatsTable = {}
+    for plrName, stats in plrStats do
+        local new = table.clone(stats)
+        new["PlayerName"] = plrName
+        table.insert(plrStatsTable, new)
+    end
+
+    table.sort(plrStatsTable, function(a, b)
+        if (a.Rebirths ~= b.Rebirths) then
+            return a.Rebirths > b.Rebirths
+        end
+        if (a.Credits ~= b.Credits) then
+            return a.Credits > b.Credits
+        end
+        return a.Wins > b.Wins
+    end)
+    for i, stats in plrStatsTable do
+        local profile = Frames.Profile.Profiles:FindFirstChild(stats.PlayerName)
+        if not profile then continue end
+        profile.LayoutOrder = i
+    end
+    -- Keep local player's profile pinned at top
+    if Frames.Profile.Profiles:FindFirstChild(player.Name) then
+        Frames.Profile.Profiles[player.Name].LayoutOrder = -1
+    end
+end
+
+local function statTrack(plr)
+    if not Frames.Profile.Profiles:FindFirstChild(plr.Name) then return end
+    local profile = Frames.Profile.Profiles[plr.Name]
+    local plrData = plr:WaitForChild("Data"):WaitForChild("PlayerData")
+
+    plrStats[plr.Name] = {
+        Rebirths = plrData.Rebirth.Value,
+        Credits = plrData.Credits.Value,
+        Wins = plrData.Wins.Value
+    }
+    -- Initialize stat fields
+    profile.Fields.Rebirths.Text = "Rebirths: "..Utilities.Short.en(plrData.Rebirth.Value)
+    profile.Fields.Credits.Text = "Credits: "..Utilities.Short.en(plrData.Credits.Value).."¢"
+    profile.Fields.Wins.Text = "Wins: "..Utilities.Short.en(plrData.Wins.Value)
+    sortProfiles()
+    
+    plrData.Rebirth.Changed:Connect(function(value)
+        profile.Fields.Rebirths.Text = "Rebirths: "..Utilities.Short.en(value)
+        plrStats[plr.Name].Rebirths = value
+        sortProfiles()
+    end)
+
+    plrData.Credits.Changed:Connect(function(value)
+        profile.Fields.Credits.Text = "Credits: "..Utilities.Short.en(value).."¢"
+        plrStats[plr.Name].Credits = value
+        sortProfiles()
+    end)
+
+    plrData.Wins.Changed:Connect(function(value)
+        profile.Fields.Wins.Text = "Wins: "..Utilities.Short.en(value)
+        plrStats[plr.Name].Wins = value
+        sortProfiles()
+    end)
+end
+
+local function addPlayerToList(plr)
+    if not FeatureFlags.isEnabled("ProfileIcon") then return end -- TODO: Delete flag
+    local frame = this.ProfileTemplate:Clone()
+    frame.Name = plr.Name
+    frame.Fields.Title.Username.Text = plr.Name
+    local success, result = pcall(function()
+        return game.Players:GetUserThumbnailAsync(plr.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
+    end)
+    if success then
+        frame.Fields.Title.ProfilePicture.Image = result
+    end
+    frame.Parent = Frames.Profile.Profiles
+    task.spawn(statTrack, plr)
+end
+
+local function removePlayerFromList(plr)
+    if not FeatureFlags.isEnabled("ProfileIcon") then return end -- TODO: Delete flag
+    plrStats[plr.Name] = nil
+    local profile = Frames.Profile.Profiles:FindFirstChild(plr.Name)
+    if profile then
+        profile:Destroy()
+    end
+end
+
+for _, plr in game.Players:GetChildren() do
+    addPlayerToList(plr)
+end
+
+game.Players.PlayerAdded:Connect(addPlayerToList)
+game.Players.PlayerRemoving:Connect(removePlayerFromList)
+
+
 
 --// Rebirth
 Frames.Rebirth.ProgressBar.Bar.Activated:Connect(function()

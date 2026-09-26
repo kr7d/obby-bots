@@ -8,6 +8,8 @@ local Players = game:GetService("Players")
 local Modules = RS:WaitForChild("Modules")
 local Utilities = require(Modules.Utilities)
 local Icon = require(Modules.IconManager.Icon)
+local GS = RS:WaitForChild("Game Settings")
+local FeatureFlags = require(GS.FeatureFlags)
 
 --// Variables
 local this = Modules.IconManager
@@ -22,6 +24,16 @@ local settingsIcon = Icon.new()
     end)
     :oneClick()
     :setImage(this.Settings:GetAttribute("ImageID"))
+
+
+local profileIcon = if FeatureFlags.isEnabled("ProfileIcon") then Icon.new() -- TODO: Delete flag
+    :setName("Profile")
+    :bindEvent("deselected", function()
+        Utilities.UI.DisplayFrame(UI.Canvas.Frames:FindFirstChild("Profile"), this.Profile)
+    end)
+    :oneClick()
+    :setImage(this.Profile:GetAttribute("ImageID"))
+else nil
     
 local rebirthIcon = Icon.new()
     :setName("Rebirth")
@@ -34,6 +46,10 @@ local rebirthIcon = Icon.new()
 --// Getters
 function IconManager.getSettingsIcon()
     return settingsIcon
+end
+
+function IconManager.getProfileIcon()
+    return profileIcon
 end
 
 function IconManager.getRebirthIcon()

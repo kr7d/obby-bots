@@ -66,17 +66,17 @@ local function showCreditsDiff()
 		clone.Position = UDim2.new(xPosition, 0, 0.25, 0)
 		
 		if profit >= 0 then
-			clone.TextColor3 = Color3.fromRGB(0,255,0)
+			clone.TextColor3 = Color3.fromRGB(0,200,0)
 			clone.Text = "+"
 		elseif profit < 0 then
-			clone.TextColor3 = Color3.fromRGB(255,0,0)
+			clone.TextColor3 = Color3.fromRGB(200,0,0)
 			clone.Text = ""
 		else
 			clone.TextColor3 = Color3.fromRGB(200,200,200)
 			clone.Text = ""
 		end
 		
-		clone.Text = clone.Text..tostring(profit).."¢"
+		clone.Text = clone.Text..Utilities.Short.en(profit).."¢"
 		task.spawn(function()
 			local tween = TweenService:Create(clone, tweenInfo, {
 				Position = UDim2.new(xPosition, 0, 0, 0),

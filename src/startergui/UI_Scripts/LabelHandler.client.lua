@@ -57,14 +57,9 @@ local function updateRebirthLabel()
 end
 
 local oldCredits = nil
-playerData.Credits:GetPropertyChangedSignal("Value"):Connect(function()
-    updateRebirthLabel()
-
-	local newCredits = playerData.Credits.Value
-	creditsLabel.Text = Utilities.Short.en(newCredits).."¢"
-	
-	if oldCredits ~= nil then
-		local profit = newCredits - oldCredits
+local function showCreditsDiff()
+	if oldCredits then
+		local profit = playerData.Credits.Value - oldCredits
 		local xPosition = math.random(0, 25)/100
 		local clone = statusLabel:Clone()
 		clone.Parent = frame
@@ -90,13 +85,23 @@ playerData.Credits:GetPropertyChangedSignal("Value"):Connect(function()
 			tween:Play()
 		end)
 	end
-	oldCredits = newCredits
-end)
+	oldCredits = playerData.Credits.Value
+end
 
-statusLabel.Text = ""
+local function updateCreditsLabel()
+	creditsLabel.Text = Utilities.Short.en(playerData.Credits.Value).."¢"
+    showCreditsDiff()
+end
+
+playerData.Credits:GetPropertyChangedSignal("Value"):Connect(function()
+    updateRebirthLabel()
+    updateCreditsLabel()
+end)
 
 playerData.Rebirth:GetPropertyChangedSignal("Value"):Connect(updateRebirthLabel)
 updateRebirthLabel()
+updateCreditsLabel()
+statusLabel.Text = ""
 
 
 --* Initialize text for Slot 4 BuyButton *--

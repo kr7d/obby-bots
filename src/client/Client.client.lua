@@ -64,10 +64,6 @@ local function initializeUI()
 		slotsFrame[i].Fields.Interactable = ownsBot.Value
 		slotsFrame[i].Fields.ResetButton.Visible = ownsBot.Value
 	end
-
-	-- Credits Label
-	local creditsLabel = UI.Canvas.Credits.CreditsLabel
-	creditsLabel.Text = Utilities.Short.en(playerData.Credits.Value).."¢"
 end
 
 initializeUI()

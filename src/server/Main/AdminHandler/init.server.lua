@@ -46,6 +46,17 @@ function Main(Player) -- this code is called for each player joining
 				if Arg1 == nil then return end
 				Stat.Value = Arg1
 			end
+        elseif Command == "/setrebirth" then -- /setrebirth PlayerName Integer
+            local TargetPlayer = AdminFunctions.FindPlayerFromName(PlayerName, Player)
+            if TargetPlayer == nil then return end
+            
+            Arg1 = tonumber(Arg1)
+            if not (Arg1 and Arg1 >= 0) then return end
+
+            local Stat = TargetPlayer.Data.PlayerData:FindFirstChild("Rebirth")
+            if Stat == nil then return end
+
+            Stat.Value = Arg1
 		elseif Command == "/setbot" then -- /setbot PlayerName BotName Tier Copies
 			local TargetPlayer = AdminFunctions.FindPlayerFromName(PlayerName, Player)
 			if TargetPlayer == nil then return end

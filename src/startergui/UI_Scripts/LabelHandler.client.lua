@@ -36,7 +36,7 @@ local tweenInfo = TweenInfo.new(
 	0 -- DelayTime
 )
 
---* Display when player gains/loses credits *--
+--* Update when player gains/loses credits or when rebirth changes *--
 local function updateRebirthLabel()
     local credits = playerData.Credits.Value
     local creditReq = Settings["REBIRTH_BASE_COST"] * (9^playerData.Rebirth.Value)
@@ -94,6 +94,8 @@ playerData.Credits:GetPropertyChangedSignal("Value"):Connect(function()
 end)
 
 statusLabel.Text = ""
+
+playerData.Rebirth:GetPropertyChangedSignal("Value"):Connect(updateRebirthLabel)
 updateRebirthLabel()
 
 

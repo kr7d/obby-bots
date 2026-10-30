@@ -30,20 +30,6 @@ local function LoadPlaylist(PlaylistName: String): ()
     end
 end
 
-local function ChooseSong(songs, currentSong)
-    local length = #songs
-
-    if length == 1 then return songs[1] end
-
-    local random = Random.new()
-    local newSong
-    repeat
-        newSong = songs[random:NextInteger(1, length)]
-    until newSong ~= currentSong
-    currentSong = newSong
-    return currentSong
-end
-
 module.PlayFromPlaylist = function(PlaylistName: String): ()
     LoadPlaylist(PlaylistName)
     if not CurrentPlaylist then
@@ -51,14 +37,24 @@ module.PlayFromPlaylist = function(PlaylistName: String): ()
         return
     end
 
-    local songs = CurrentPlaylist:GetChildren()
+	local songs = CurrentPlaylist:GetChildren()
     local length = #songs
-    local currentSong = songs[1]
-
+    local currentSong
+	local currentIteration = Random.new():NextInteger(1, #songs)
     task.spawn(function()
-        while CurrentPlaylist do
-            currentSong = ChooseSong(songs, currentSong)
-            currentSong.Loaded:Wait()
+		while CurrentPlaylist.Parent ~= nil do
+			if currentSong then
+				currentSong:Stop()
+			end
+			currentSong = songs[currentIteration]
+			if currentIteration == #songs then
+				currentIteration = 1
+			else
+				currentIteration += 1
+			end
+			if not currentSong.IsLoaded then
+				currentSong.Loaded:Wait()
+			end
             currentSong:Play()
             wait(currentSong.TimeLength)
         end
